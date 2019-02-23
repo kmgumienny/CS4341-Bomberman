@@ -20,7 +20,7 @@ class qCharacter(CharacterEntity):
         self.qLearner = qLearner
         self.isTraining = isTraining
         self.iterationNum = iterationNum
-        self.maxIteration = maxIterations
+        self.maxIterations = maxIterations
 
 
     #Variables
