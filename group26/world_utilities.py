@@ -213,6 +213,15 @@ def find_walls(world):
     return walls
 
 
+# Find any explosions in the world
+def find_explosions(world):
+    expls = []
+    for x in range(0, world.width()):
+        for y in range(0, world.height()):
+            if world.explosion_at(x, y):
+                expls.append((x, y))
+    return expls
+
 # Given a point p1, find the closest point in points to p1
 # If euclidean is True, use euclidean distance, otherwise use manhattan distance
 def closest_point(p1, points, euclidean=True):

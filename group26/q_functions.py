@@ -86,23 +86,37 @@ def f_time_to_explosion(world, character):
 
 # return 1 if the cell the character is in will explode, or has exploded
 # return 0 if the cell the character is in will not explode
-def f_is_exploded(world, character):
-    if world.me(character) is None:
-        return 1
+# def f_is_exploded(world, character):
+#     #if world.me(character) is None:
+#     #    return 1
+#
+#     character_location = (character.x, character.y)
+#
+#     bombs = find_bombs(world)
+#
+#     if len(bombs) == 0:
+#         return 0
+#
+#     (bx, by) = closest_point(character_location, bombs, euclidean=False)
+#     closest_bomb = world.bomb_at(bx, by)
+#
+#     world.add_blast(closest_bomb)
+#
+#     if world.explosion_at(character.x, character.y) is not None:
+#         return 0
+#     else:
+#         return 1
 
+def f_is_exploded(world, character):
     character_location = (character.x, character.y)
 
-    bombs = find_bombs(world)
+    expls = find_explosions(world)
 
-    if len(bombs) == 0:
+    if len(expls) == 0:
         return 0
 
-    (bx, by) = closest_point(character_location, bombs, euclidean=False)
-    closest_bomb = world.bomb_at(bx, by)
+    closest_expl = closest_point(character_location, expls, euclidean=False)
 
-    world.add_blast(closest_bomb)
+    a_star_distance = a_star(world, character_location, closest_expl)[1] + 1
 
-    if world.explosion_at(character.x, character.y) is not None:
-        return 1
-    else:
-        return 0
+    return (1 / float(a_star_distance)) ** 2

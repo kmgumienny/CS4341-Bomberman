@@ -34,7 +34,8 @@ class qCharacter(CharacterEntity):
             randomChance = 1/(self.iterationNum+1) ** .25
             if random.random() < randomChance:
                 possibleStep = [-1, 0, 1]
-                possibleBomb = [0]#, 1]
+                possibleBomb = [0, 1]
+
                 if random.choice(possibleBomb) == 1:
                     self.place_bomb()
                 self.move(random.choice(possibleStep), random.choice(possibleStep))
@@ -44,11 +45,17 @@ class qCharacter(CharacterEntity):
 
                 if move[2] == 1:
                     self.place_bomb()
+        else:
+            move, _ = self.qLearner.bestMove(world, self)
+            self.move(move[0], move[1])
+
+            if move[2] == 1:
+                self.place_bomb()
 
     def updateWeights(self, world, won, lost):
         reward = 0
         if won:
-            reward = 1000
+            reward = 1000000
         elif lost:
             reward = -1000
         else:
