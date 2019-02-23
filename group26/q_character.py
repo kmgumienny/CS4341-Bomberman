@@ -21,6 +21,8 @@ class qCharacter(CharacterEntity):
         self.iterationNum = iterationNum
         self.maxIteration = maxIterations
 
+        self.prevWorld = None
+
 
     #Variables
     #   qLearner holds the weights
@@ -28,6 +30,8 @@ class qCharacter(CharacterEntity):
     #   interationNum keeps track of iteration # in learning.
     #   maxIterations holds the
     def do(self, world):
+        self.prevWorld = world
+
         if self.isTraining:
             randomChance = 1/(self.maxIternations - self.iternationNum)
             if random.random < randomChance:
