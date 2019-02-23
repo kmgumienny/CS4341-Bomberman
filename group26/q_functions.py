@@ -1,4 +1,7 @@
 import math
+import sys
+sys.path.insert(0, '../bomberman')
+
 from world_utilities import *
 
 
