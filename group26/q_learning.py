@@ -4,13 +4,14 @@ from q_functions import *
 sys.path.insert(0, "../")
 
 from entity import *
+from events import Event
 
 NUM_WEIGHTS = 6
 
 from sensed_world import SensedWorld
 
-POSSIBLE_MOVES = [(1, 0, 0), (1, 1, 0), (1, -1, 0), (-1, 0, 0), (-1, 1, 0), (-1, -1, 0), (0, -1, 0), (0, 1, 0),
-                  (1, 0, 1), (1, 1, 1), (1, -1, 1), (-1, 0, 1), (-1, 1, 1), (-1, -1, 1), (0, -1, 1), (0, 1, 1)]
+POSSIBLE_MOVES = [(1, 0, 0), (1, 1, 0), (1, -1, 0), (-1, 0, 0), (-1, 1, 0), (-1, -1, 0), (0, -1, 0), (0, 1, 0)]
+                  #(1, 0, 1), (1, 1, 1), (1, -1, 1), (-1, 0, 1), (-1, 1, 1), (-1, -1, 1), (0, -1, 1), (0, 1, 1)]
 
 GAMMA = .9
 ALPHA = .2
@@ -33,7 +34,17 @@ class QLearner:
             if move[2] == 1:
                 new_world.me(character).place_bomb()
 
-            q = self.Q(new_world, new_world.me(character))
+            new_world, events = new_world.next()
+
+            if new_world.me(character) is None:
+                for event in events:
+                    if event.tpe == Event.BOMB_HIT_CHARACTER or event.tpe == Event.CHARACTER_KILLED_BY_MONSTER:
+                        q = -999
+                    if event.tpe == Event.CHARACTER_FOUND_EXIT:
+                        q = 999
+            else:
+                q = self.Q(new_world, new_world.me(character))
+
             if q > max_q:
                 max_q = q
                 max_a = move
@@ -60,3 +71,15 @@ class QLearner:
         sum += self.weights[5] * f_is_exploded(world, character)
 
         return sum
+
+    def f_values(self, world, character):
+        f = [0,0,0,0,0,0]
+
+        f[0] = f_to_exit(world, character)
+        f[1] = f_to_monster(world, character)
+        f[2] = f_to_bomb(world, character)
+        f[3] = f_to_wall(world, character)
+        f[4] = f_time_to_explosion(world, character)
+        f[5] = f_is_exploded(world, character)
+
+        return f
