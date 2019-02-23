@@ -2,6 +2,7 @@
 import sys
 import random
 import heapq
+from q_functions import *
 from colorama import Fore, Back
 
 sys.path.insert(0, '../bomberman')
@@ -33,7 +34,8 @@ class qCharacter(CharacterEntity):
             if random.random < randomChance:
                 possibleStep = [-1, 0, 1]
                 possibleBomb = [0, 1]
-                self.place_bomb(random.choice(possibleBomb))
+                if random.choice(possibleBomb) == 1:
+                  self.place_bomb()
                 self.move(random.choice(possibleStep), random.choice(possibleStep))
             else:
                 self.qLearner.bestMove(world, self)
