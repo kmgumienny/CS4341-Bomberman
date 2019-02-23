@@ -7,15 +7,15 @@ sys.path.insert(1, '..')
 from game import Game
 
 # TODO This is your code!
-sys.path.insert(1, '../groupNN')
-from q_character import QCharacter
+sys.path.insert(1, '../group26')
+from testcharacter import TestCharacter
 
 
 # Create the game
 g = Game.fromfile('map.txt')
 
 # TODO Add your character
-g.add_character(QCharacter("me", # name
+g.add_character(TestCharacter("me", # name
                               "C",  # avatar
                               0, 0  # position
 ))
