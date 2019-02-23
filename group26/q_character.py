@@ -1,6 +1,7 @@
 # This is necessary to find the main code
 import sys
 import heapq
+from q_functions import f_to_exit
 from colorama import Fore, Back
 
 sys.path.insert(0, '../bomberman')
@@ -25,3 +26,11 @@ class qCharacter(CharacterEntity):
 
         if isTraining:
             randomChance = 1/(maxIternations-iternationNum)
+
+
+    def getReward(self, world, won, lost):
+        if won:
+            return 1000
+        if lost:
+            return -1000
+        return -1 + f_to_exit(world, self)
