@@ -48,8 +48,9 @@ class qCharacter(CharacterEntity):
         reward = 0
         if won:
             reward = 1000
-        if lost:
+        elif lost:
             reward = -1000
-        reward = -1 + f_to_exit(world, self)
+        else:
+            reward = -1 + f_to_exit(world, self)
 
         self.qLearner.updateWeights(self.prevWorld, world, self, reward)
