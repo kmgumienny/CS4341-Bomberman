@@ -29,7 +29,7 @@ class qCharacter(CharacterEntity):
     #   maxIterations holds the
     def do(self, world):
         if self.isTraining:
-            randomChance = 1/(self.maxIternations - self.iternationNum)
+            randomChance = 1/(self.maxIterations - self.iterationNum)
             if random.random < randomChance:
                 possibleStep = [-1, 0, 1]
                 possibleBomb = [0, 1]
