@@ -9,11 +9,16 @@ from entity import CharacterEntity
 
 
 class qCharacter(CharacterEntity):
-    def __init__(self, name, avatar, x, y):
+    def __init__(self, name, avatar, x, y, qLearner, isTraining, iterationNum, maxIterations):
         CharacterEntity.__init__(self, name, avatar, x, y)
         self.exit = None
         self.bombed = None
         self.tiles = {}
+
+        self.qLearner = qLearner
+        self.isTraining = isTraining
+        self.iterationNum = iterationNum
+        self.maxIteration = maxIterations
 
 
     #Variables
@@ -21,7 +26,7 @@ class qCharacter(CharacterEntity):
     #   isTraining is a boolean deciding if qLearner is updated
     #   interationNum keeps track of iteration # in learning.
     #   maxIterations holds the
-    def do(self, world, qLearner, isTraining, iternationNum, maxIternations):
+    def do(self, world):
 
         if isTraining:
             randomChance = 1/(maxIternations-iternationNum)
