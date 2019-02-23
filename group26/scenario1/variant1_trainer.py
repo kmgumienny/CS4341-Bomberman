@@ -16,7 +16,8 @@ from q_learning import QLearner
 qLearner = QLearner([1, 1, 1, 1, 1, 1])
 
 
-for i in range(0, 1000):
+for i in range(0, 100):
+    print("Running iteration #"+str(i))
     # Create the game
     g = Game.fromfile('map.txt', display=False)
 
@@ -27,9 +28,9 @@ for i in range(0, 1000):
                                True,
                                i,
                                1000))
-
     # Run!
     g.go()
+    print(g.world.scores["me"])
 
 # Create the game
 g = Game.fromfile('map.txt', display=True)

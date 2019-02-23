@@ -21,15 +21,19 @@ class QLearner:
 
     #returns (dx, dy, bomb?)
     def bestMove(self, world, character):
-        max_q = -9999999999
+        max_q = -9999
         max_a = None
         for move in POSSIBLE_MOVES:
             new_world = SensedWorld.from_world(world)
-            new_world.characters[character.name].move(move[0], move[1])
-            if move[2] == 1:
-                new_world.characters[character.name].place_bomb()
 
-            q = self.Q(new_world, new_world.characters[character.name])
+            if new_world.me(character) is None:
+                continue
+
+            new_world.me(character).move(move[0], move[1])
+            if move[2] == 1:
+                new_world.me(character).place_bomb()
+
+            q = self.Q(new_world, new_world.me(character))
             if q > max_q:
                 max_q = q
                 max_a = move

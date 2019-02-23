@@ -16,7 +16,7 @@ def f_to_exit(world, character):
 
     closest_exit = closest_point(character_location, exits, euclidean=False)
 
-    a_star_distance = a_star(world, character_location, closest_exit)[1]
+    a_star_distance = a_star(world, character_location, closest_exit)[1]+1
 
     return (1/float(a_star_distance))**2
 
@@ -32,7 +32,7 @@ def f_to_monster(world, character):
 
     closest_monster = closest_point(character_location, monsters, euclidean=False)
 
-    a_star_distance = a_star(world, character_location, monsters)[1]
+    a_star_distance = a_star(world, character_location, closest_monster)[1]+1
 
     return (1/float(a_star_distance))**2
 
@@ -48,7 +48,7 @@ def f_to_bomb(world, character):
 
     closest_bomb = closest_point(character_location, bombs, euclidean=False)
 
-    a_star_distance = a_star(world, character_location, closest_bomb)[1]
+    a_star_distance = a_star(world, character_location, closest_bomb)[1]+1
 
     return (1/float(a_star_distance))**2
 
@@ -62,9 +62,9 @@ def f_to_wall(world, character):
     if len(walls) == 0:
         return 0
 
-    closest_exit = closest_point(character_location, walls, euclidean=False)
+    closest_wall = closest_point(character_location, walls, euclidean=False)
 
-    a_star_distance = a_star(world, character_location, closest_wall)[1]
+    a_star_distance = a_star(world, character_location, closest_wall)[1]+1
 
     return (1 / float(a_star_distance)) ** 2
 
@@ -81,7 +81,7 @@ def f_time_to_explosion(world, character):
     (bx, by) = closest_point(character_location, bombs, euclidean=False)
     closest_bomb = world.bomb_at(bx, by)
 
-    return (1 / float(closest_bomb.timer)) ** 2
+    return (1 / float(closest_bomb.timer+1)) ** 2
 
 
 # return 1 if the cell the character is in will explode, or has exploded

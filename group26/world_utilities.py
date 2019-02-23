@@ -1,5 +1,5 @@
 import math
-
+import heapq
 
 INFINITY = float("inf")
 
@@ -235,7 +235,7 @@ def euclidean_distance_between(p1, p2):
 
 # Determine the manhattan distance between two point
 def manhattan_distance_between(p1, p2):
-    return math.abs(p1[0] - p2[0]) + math.abs(p1[1] - p2[1])
+    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
 
 
 # Find the optimal path between start and end in the world and return the path

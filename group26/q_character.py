@@ -1,6 +1,6 @@
 # This is necessary to find the main code
 import sys
-import random
+import random, math
 import heapq
 from q_functions import *
 from colorama import Fore, Back
@@ -22,6 +22,9 @@ class qCharacter(CharacterEntity):
         self.iterationNum = iterationNum
         self.maxIterations = maxIterations
 
+        randomChance = 1 / (self.iterationNum + 1) ** .01
+        print(randomChance)
+
         self.prevWorld = None
 
 
@@ -34,8 +37,8 @@ class qCharacter(CharacterEntity):
         self.prevWorld = world
 
         if self.isTraining:
-            randomChance = 1/(self.maxIterations - self.iterationNum)
-            if random.random < randomChance:
+            randomChance = 1/(self.iterationNum+1) ** .01
+            if random.random() < randomChance:
                 possibleStep = [-1, 0, 1]
                 possibleBomb = [0, 1]
                 if random.choice(possibleBomb) == 1:
