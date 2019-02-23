@@ -1,7 +1,7 @@
 # This is necessary to find the main code
 import sys
+import random
 import heapq
-from q_functions import f_to_exit
 from colorama import Fore, Back
 
 sys.path.insert(0, '../bomberman')
@@ -10,7 +10,7 @@ from entity import CharacterEntity
 
 
 class qCharacter(CharacterEntity):
-    def __init__(self, name, avatar, x, y):
+    def __init__(self, name, avatar, x, y, qLearner, isTraining, iterationNum, maxIterations):
         CharacterEntity.__init__(self, name, avatar, x, y)
         self.exit = None
         self.bombed = None
@@ -21,18 +21,22 @@ class qCharacter(CharacterEntity):
         self.iterationNum = iterationNum
         self.maxIteration = maxIterations
 
-        self.prevWorld = None
 
     #Variables
     #   qLearner holds the weights
     #   isTraining is a boolean deciding if qLearner is updated
     #   interationNum keeps track of iteration # in learning.
     #   maxIterations holds the
-    def do(self, world, qLearner, isTraining, iternationNum, maxIternations):
-        self.prevWorld = world
-
-        if isTraining:
-            randomChance = 1/(maxIternations-iternationNum)
+    def do(self, world):
+        if self.isTraining:
+            randomChance = 1/(self.maxIternations - self.iternationNum)
+            if random.random < randomChance:
+                possibleStep = [-1, 0, 1]
+                possibleBomb = [0, 1]
+                self.place_bomb(random.choice(possibleBomb))
+                self.move(random.choice(possibleStep), random.choice(possibleStep))
+            else:
+                self.qLearner.bestMove(world, self)
 
     def updateWeights(self, world, won, lost):
         reward = 0
