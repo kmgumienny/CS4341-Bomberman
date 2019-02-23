@@ -3,17 +3,20 @@ from events import Event
 import colorama
 import pygame
 import math
+import time
 
 class Game:
     """Game class"""
 
-    def __init__(self, width, height, max_time, bomb_time, expl_duration, expl_range):
+    def __init__(self, width, height, max_time, bomb_time, expl_duration, expl_range, display=True):
         self.world = RealWorld.from_params(width, height, max_time, bomb_time, expl_duration, expl_range)
         self.sprite_dir = "../../bomberman/sprites/"
-        self.load_gui(width, height)
+        self.display = display
+        if self.display:
+            self.load_gui(width, height)
 
     @classmethod
-    def fromfile(cls, fname):
+    def fromfile(cls, fname, display=True):
         with open(fname, 'r') as fd:
             # First lines are parameters
             max_time = int(fd.readline().split()[1])
@@ -32,7 +35,7 @@ class Game:
                     raise RuntimeError("Row", height, "is not", width, "characters long")
                 row = fd.readline()
             # Create empty world
-            gm = cls(width, height, max_time, bomb_time, expl_duration, expl_range)
+            gm = cls(width, height, max_time, bomb_time, expl_duration, expl_range, display)
             # Now parse the data in the world
             fd.seek(startpos)
             for y in range(0, height):
@@ -92,19 +95,24 @@ class Game:
         pygame.display.flip()
 
     def go(self):
-        colorama.init(autoreset=True)
-        self.display_gui()
-        self.draw()
-        while not self.done():
-            self.display_gui()
-            self.step()
+        if self.display:
+            colorama.init(autoreset=True)
             self.display_gui()
             self.draw()
-        colorama.deinit()
+        while not self.done():
+            if self.display:
+                self.display_gui()
+            self.step()
+            if self.display:
+                self.display_gui()
+                self.draw()
+        if self.display:
+            colorama.deinit()
 
     def step(self):
         (self.world, self.events) = self.world.next()
-        input("Press Enter to continue...")
+        if self.display:
+            input("Press Enter to continue...")
 
     ###################
     # Private methods #
