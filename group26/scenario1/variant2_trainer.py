@@ -5,6 +5,7 @@ sys.path.insert(1, '..')
 
 # Import necessary stuff
 from game import Game
+from monsters.stupid_monster import StupidMonster
 
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
@@ -20,6 +21,11 @@ for i in range(0, 100):
     print("Running iteration #"+str(i))
     # Create the game
     g = Game.fromfile('map.txt', display=False)
+
+    g.add_monster(StupidMonster("monster",  # name
+                                "M",  # avatar
+                                3, 9  # position
+                                ))
 
     g.add_character(qCharacter("me", # name
                                   "C",  # avatar

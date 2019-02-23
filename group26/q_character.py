@@ -22,30 +22,28 @@ class qCharacter(CharacterEntity):
         self.iterationNum = iterationNum
         self.maxIterations = maxIterations
 
-        randomChance = 1 / (self.iterationNum + 1) ** .01
+        randomChance = 1 / (self.iterationNum + 1) ** .25
         print(randomChance)
 
         self.prevWorld = None
 
-
-    #Variables
-    #   qLearner holds the weights
-    #   isTraining is a boolean deciding if qLearner is updated
-    #   interationNum keeps track of iteration # in learning.
-    #   maxIterations holds the
     def do(self, world):
         self.prevWorld = world
 
         if self.isTraining:
-            randomChance = 1/(self.iterationNum+1) ** .01
+            randomChance = 1/(self.iterationNum+1) ** .25
             if random.random() < randomChance:
                 possibleStep = [-1, 0, 1]
-                possibleBomb = [0, 1]
+                possibleBomb = [0]#, 1]
                 if random.choice(possibleBomb) == 1:
-                  self.place_bomb()
+                    self.place_bomb()
                 self.move(random.choice(possibleStep), random.choice(possibleStep))
             else:
-                self.qLearner.bestMove(world, self)
+                move, _ = self.qLearner.bestMove(world, self)
+                self.move(move[0], move[1])
+
+                if move[2] == 1:
+                    self.place_bomb()
 
     def updateWeights(self, world, won, lost):
         reward = 0
