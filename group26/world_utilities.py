@@ -133,7 +133,7 @@ def a_star_next_x(world, character):
         return INFINITY
 
     closest_exit = closest_point(character_location, exits)
-    next_position = a_star_path(world, character_location, closest_exit)[1]
+    next_position = a_star(world, character_location, closest_exit)[0][1]
 
     x_diff = next_position[0] - character_location[0]
 
@@ -157,7 +157,7 @@ def a_star_next_y(world, character):
         return INFINITY
 
     closest_exit = closest_point(character_location, exits)
-    next_position = a_star_path(world, character_location, closest_exit)[1]
+    next_position = a_star(world, character_location, closest_exit)[0][1]
 
     y_diff = next_position[1] - character_location[1]
 
@@ -240,7 +240,7 @@ def manhattan_distance_between(p1, p2):
 
 # Find the optimal path between start and end in the world and return the path
 # Note: the first point in the path will be the starting point
-def a_star_path(world, start, end):
+def a_star(world, start, end):
         frontier = PriorityQueue()
         frontier.put(start, 0)
         came_from = {}
@@ -276,7 +276,7 @@ def a_star_path(world, start, end):
             current = came_from[current]
         path.append(start)  # optional
         path.reverse()  # optional
-        return path
+        return (path, cost_so_far[end])
 
 
 # From RedBlobGames
