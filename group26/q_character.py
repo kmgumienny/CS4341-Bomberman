@@ -19,7 +19,7 @@ class qCharacter(CharacterEntity):
         self.qLearner = qLearner
         self.isTraining = isTraining
         self.iterationNum = iterationNum
-        self.maxIteration = maxIterations
+        self.maxIterations = maxIterations
 
         self.prevWorld = None
 
@@ -33,7 +33,7 @@ class qCharacter(CharacterEntity):
         self.prevWorld = world
 
         if self.isTraining:
-            randomChance = 1/(self.maxIternations - self.iternationNum)
+            randomChance = 1/(self.maxIterations - self.iterationNum)
             if random.random < randomChance:
                 possibleStep = [-1, 0, 1]
                 possibleBomb = [0, 1]
