@@ -60,15 +60,17 @@ class QLearner:
         self.weights[1] += ALPHA * delta * f_to_monster(prevWorld, character)
         if self.weights[1] > 0:
             self.weights[1] = 0
-        self.weights[2] += ALPHA * delta * f_to_bomb(prevWorld, character)
+        self.weights[2] += ALPHA * delta * f_to_bomb(prevWorld, character) * (number_walls(prevWorld) + number_monsters(prevWorld))
         if self.weights[2] > 0:
             self.weights[2] = 0
         self.weights[3] += ALPHA * delta * f_to_wall(prevWorld, character)
         self.weights[4] += ALPHA * delta * f_time_to_explosion(prevWorld, character)
         self.weights[5] += ALPHA * delta * f_is_exploded(prevWorld, character)
-        #self.weights[6] += ALPHA * delta * f_wall_to_bomb(prevWorld)
-        #self.weights[7] += ALPHA * delta * f_monster_to_bomb(prevWorld)
-        #self.weights[8] += ALPHA * delta * number_walls(prevWorld)
+        self.weights[6] += ALPHA * delta * number_walls(prevWorld)
+        self.weights[7] += ALPHA * delta * number_monsters(prevWorld)
+        # self.weights[6] += ALPHA * delta * f_wall_to_bomb(prevWorld)
+        # self.weights[7] += ALPHA * delta * f_monster_to_bomb(prevWorld)
+
 
     def Q(self, world, character):
         sum = 0
@@ -80,6 +82,7 @@ class QLearner:
         sum += self.weights[5] * f_is_exploded(world, character)
         #sum += self.weights[6] * f_wall_to_bomb(world)
         #sum += self.weights[7] * f_monster_to_bomb(world)
-        #sum += self.weights[8] * number_walls(world)
+        sum += self.weights[6] * number_walls(world)
+        sum += self.weights[7] * number_monsters(world)
 
         return sum

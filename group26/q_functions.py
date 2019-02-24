@@ -109,6 +109,20 @@ def number_walls(world):
     #I actually have no idea if this is a good implementation
     return (1 / float(len(walls))) ** 2
 
+def number_monsters(world):
+
+    monsters = find_monsters(world)
+
+    if len(monsters) == 0:
+        return 0
+
+    #closest_wall = closest_point(character_location, walls, euclidean=False)
+
+    # a_star_distance = a_star(world, character_location, closest_wall)[1]+1
+
+    #I actually have no idea if this is a good implementation
+    return (1 / float(len(monsters))) ** 2
+
 
 # 1/(time to explosion of closest bomb)^2
 def f_time_to_explosion(world, character):
