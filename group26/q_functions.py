@@ -53,6 +53,33 @@ def f_to_bomb(world, character):
     return (1/float(a_star_distance))**2
 
 
+def f_wall_to_bomb(world):
+    walls = find_walls(world)
+    bombs = find_bombs(world)
+
+    if len(bombs) == 0 or len(walls) == 0:
+        return 0
+
+    closest_wall = closest_point(bombs[0], walls, euclidean=False)
+
+    a_star_distance = a_star(world, bombs[0], closest_wall)[1]+1
+
+    return (1/float(a_star_distance))**2
+
+def f_monster_to_bomb(world):
+
+    monsters = find_monsters(world)
+    bombs = find_bombs(world)
+
+    if len(bombs) == 0 or len(monsters) == 0:
+        return 0
+
+    closest_monster = closest_point(bombs[0], monsters, euclidean=False)
+
+    a_star_distance = a_star(world, bombs[0], closest_monster)[1]+1
+
+    return (1/float(a_star_distance))**2
+
 # 1/(distance to closest wall)^2
 def f_to_wall(world, character):
     character_location = (character.x, character.y)
@@ -67,6 +94,20 @@ def f_to_wall(world, character):
     a_star_distance = a_star(world, character_location, closest_wall)[1]+1
 
     return (1 / float(a_star_distance)) ** 2
+
+def number_walls(world):
+
+    walls = find_walls(world)
+
+    if len(walls) == 0:
+        return 0
+
+    #closest_wall = closest_point(character_location, walls, euclidean=False)
+
+    # a_star_distance = a_star(world, character_location, closest_wall)[1]+1
+
+    #I actually have no idea if this is a good implementation
+    return (1 / float(len(walls))) ** 2
 
 
 # 1/(time to explosion of closest bomb)^2
