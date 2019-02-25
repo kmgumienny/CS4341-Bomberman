@@ -24,7 +24,8 @@ class qCharacter(CharacterEntity):
         self.maxIterations = maxIterations
 
         self.randomChance = 1 / (self.iterationNum + 1) ** .25
-        #print(randomChance)
+        #self.randomChance = -1
+        print(self.randomChance)
 
         self.prevWorld = None
 
@@ -65,7 +66,7 @@ class qCharacter(CharacterEntity):
             if won:
                 reward = 100
             elif lost:
-                reward = -10
+                reward = -100
             else:
                 reward = (f_to_exit(world, self)**.1)*10
 

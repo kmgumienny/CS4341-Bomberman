@@ -16,7 +16,7 @@ from q_learning import QLearner
 g = Game.fromfile('map.txt')
 
 # Current status: 100% success, untrained values
-qLearner = QLearner([100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+qLearner = QLearner([5.176243672570075, 0.0, 10.45043240430125, -67.74186338098747])
 
 g.add_character(qCharacter("me", # name
                               "C",  # avatar

@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, '../bomberman')
 
 from world_utilities import *
+from sensed_world import SensedWorld
 
 
 # 1/(distance to closest exit)^2
@@ -44,7 +45,7 @@ def f_to_bomb(world, character):
     bombs = find_bombs(world)
 
     if len(bombs) == 0:
-        return 1
+        return 0
 
     closest_bomb = closest_point(character_location, bombs, euclidean=False)
 
@@ -148,7 +149,7 @@ def f_is_exploded(world, character):
     if world.me(character) is None:
         return 1
 
-    world, _ = world.next()
+    world = SensedWorld.from_world(world)
 
     character_location = (character.x, character.y)
 
@@ -189,7 +190,12 @@ def f_is_exploded_now(world, character):
     if world.me(character) is None:
         return 1
     
-    if world.explosion_at(character.x, character.y) is None:
-        return 0
-    else:
+    if world.explosion_at(character.x, character.y) is not None:
         return 1
+    
+    world, _ = world.next()
+
+    if world.explosion_at(character.x, character.y) is not None:
+        return 1
+        
+    return 0
