@@ -10,8 +10,8 @@ NUM_WEIGHTS = 6
 
 from sensed_world import SensedWorld
 
-POSSIBLE_MOVES = [(1, 0, 0), (1, 1, 0), (1, -1, 0), (-1, 0, 0), (-1, 1, 0), (-1, -1, 0), (0, -1, 0), (0, 1, 0),
-                  (1, 0, 1), (1, 1, 1), (1, -1, 1), (-1, 0, 1), (-1, 1, 1), (-1, -1, 1), (0, -1, 1), (0, 1, 1)]
+POSSIBLE_MOVES = [(1, 0, 0), (1, 1, 0), (1, -1, 0), (-1, 0, 0), (-1, 1, 0), (-1, -1, 0), (0, -1, 0), (0, 1, 0), (0, 0, 0),
+                  (1, 0, 1), (1, 1, 1), (1, -1, 1), (-1, 0, 1), (-1, 1, 1), (-1, -1, 1), (0, -1, 1), (0, 1, 1), (0, 0, 1)]
 
 GAMMA = .9
 ALPHA = .2
@@ -39,9 +39,9 @@ class QLearner:
             if new_world.me(character) is None:
                 for event in events:
                     if event.tpe == Event.BOMB_HIT_CHARACTER or event.tpe == Event.CHARACTER_KILLED_BY_MONSTER:
-                        q = -999999
+                        q = -9999
                     if event.tpe == Event.CHARACTER_FOUND_EXIT:
-                        q = 999999
+                        q = 9999
             else:
                 q = self.Q(new_world, new_world.me(character))
 
@@ -52,24 +52,21 @@ class QLearner:
         return (max_a, max_q)
 
     def updateWeights(self, prevWorld, newWorld, character, reward):
-        delta = (reward + GAMMA*self.bestMove(newWorld, character)[1]) - self.Q(newWorld, character)
+        delta = (reward) - self.Q(newWorld, character)
 
-        self.weights[0] += ALPHA * delta * f_to_exit(prevWorld, character)
-        if self.weights[0] < 0:
-            self.weights[0] = 0
-        self.weights[1] += ALPHA * delta * f_to_monster(prevWorld, character)
-        if self.weights[1] > 0:
-            self.weights[1] = 0
-        self.weights[2] += ALPHA * delta * f_to_bomb(prevWorld, character) * (number_walls(prevWorld) + number_monsters(prevWorld))
-        if self.weights[2] > 0:
-            self.weights[2] = 0
-        self.weights[3] += ALPHA * delta * f_to_wall(prevWorld, character)
-        self.weights[4] += ALPHA * delta * f_time_to_explosion(prevWorld, character)
-        self.weights[5] += ALPHA * delta * f_is_exploded(prevWorld, character)
-        self.weights[6] += ALPHA * delta * number_walls(prevWorld)
-        self.weights[7] += ALPHA * delta * number_monsters(prevWorld)
-        # self.weights[6] += ALPHA * delta * f_wall_to_bomb(prevWorld)
-        # self.weights[7] += ALPHA * delta * f_monster_to_bomb(prevWorld)
+        self.weights[0] += ALPHA * delta * f_to_exit(newWorld, character)
+        if self.weights[0] < .001:
+            self.weights[0] = .001
+        self.weights[1] += ALPHA * delta * f_to_monster(newWorld, character)
+        self.weights[2] += ALPHA * delta * f_to_bomb(newWorld, character)
+        self.weights[3] += ALPHA * delta * f_bomb_to_wall(newWorld)
+        self.weights[4] += ALPHA * delta * f_to_wall(newWorld, character)
+        self.weights[5] += ALPHA * delta * f_time_to_explosion(newWorld, character)
+        self.weights[6] += ALPHA * delta * f_is_exploded(newWorld, character)
+        self.weights[7] += ALPHA * delta * f_wall_to_bomb(newWorld)
+        self.weights[8] += ALPHA * delta * f_monster_to_bomb(newWorld)
+        self.weights[9] += ALPHA * delta * number_walls(newWorld)
+        self.weights[10] += ALPHA * delta * number_monsters(newWorld)
 
 
     def Q(self, world, character):
@@ -77,12 +74,13 @@ class QLearner:
         sum += self.weights[0] * f_to_exit(world, character)
         sum += self.weights[1] * f_to_monster(world, character)
         sum += self.weights[2] * f_to_bomb(world, character)
-        sum += self.weights[3] * f_to_wall(world, character)
-        sum += self.weights[4] * f_time_to_explosion(world, character)
-        sum += self.weights[5] * f_is_exploded(world, character)
-        #sum += self.weights[6] * f_wall_to_bomb(world)
-        #sum += self.weights[7] * f_monster_to_bomb(world)
-        sum += self.weights[6] * number_walls(world)
-        sum += self.weights[7] * number_monsters(world)
+        sum += self.weights[3] * f_bomb_to_wall(world)
+        sum += self.weights[4] * f_to_wall(world, character)
+        sum += self.weights[5] * f_time_to_explosion(world, character)
+        sum += self.weights[6] * f_is_exploded(world, character)
+        sum += self.weights[7] * f_wall_to_bomb(world)
+        sum += self.weights[8] * f_monster_to_bomb(world)
+        sum += self.weights[9] * number_walls(world)
+        sum += self.weights[10] * number_monsters(world)
 
         return sum
