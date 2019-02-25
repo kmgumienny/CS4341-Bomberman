@@ -8,13 +8,13 @@ from game import Game
 
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
-from q_learning import QLearner
+from q_learning import QLearner, NUM_WEIGHTS
 from monsters.stupid_monster import StupidMonster
 from monsters.selfpreserving_monster import SelfPreservingMonster
 
 
 
-qLearner = QLearner([0]*11)
+qLearner = QLearner([0]*NUM_WEIGHTS)
 
 for i in range(0, 100):
     print("Running iteration #"+str(i))

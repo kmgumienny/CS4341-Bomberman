@@ -53,7 +53,7 @@ def f_to_bomb(world, character):
     return (1/float(a_star_distance))**2
 
 
-def f_wall_to_bomb(world):
+def f_wall_to_bomb(world, character = None):
     walls = find_walls(world)
     bombs = find_bombs(world)
 
@@ -67,7 +67,7 @@ def f_wall_to_bomb(world):
     return (1/float(a_star_distance))**2
 
 
-def f_monster_to_bomb(world):
+def f_monster_to_bomb(world, character = None):
 
     monsters = find_monsters(world)
     bombs = find_bombs(world)
@@ -98,7 +98,7 @@ def f_to_wall(world, character):
     return (1 / float(a_star_distance)) ** 2
 
 
-def number_walls(world):
+def number_walls(world, character = None):
 
     walls = find_walls(world)
 
@@ -112,7 +112,7 @@ def number_walls(world):
     #I actually have no idea if this is a good implementation
     return (1 / float(len(walls))) ** 2
 
-def number_monsters(world):
+def number_monsters(world, character = None):
 
     monsters = find_monsters(world)
 
@@ -147,6 +147,8 @@ def f_time_to_explosion(world, character):
 def f_is_exploded(world, character):
     if world.me(character) is None:
         return 1
+
+    world, _ = world.next()
 
     character_location = (character.x, character.y)
 
@@ -185,7 +187,7 @@ def f_is_exploded_help(world, loc):
         return 1
 
 
-def f_bomb_to_wall(world):
+def f_bomb_to_wall(world, character = None):
     bombs = find_bombs(world)
     walls = find_walls(world)
 
@@ -202,3 +204,12 @@ def f_bomb_to_wall(world):
     a_star_distance = a_star(world, bomb, closest_wall)[1] + 1
 
     return (1 / float(a_star_distance)) ** 2
+
+def f_is_exploded_now(world, character):
+    if world.me(character) is None:
+        return 1
+    
+    if world.explosion_at(character.x, character.y) is not None or (bx == character.x and by == character.y):
+        return 0
+    else:
+        return 1

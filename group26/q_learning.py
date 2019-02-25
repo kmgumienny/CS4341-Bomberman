@@ -6,7 +6,8 @@ sys.path.insert(0, "../")
 from entity import *
 from events import Event
 
-NUM_WEIGHTS = 6
+FUNCTIONS = [f_to_exit, f_to_monster, f_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion, f_is_exploded, f_wall_to_bomb, f_monster_to_bomb, number_walls, number_monsters]
+NUM_WEIGHTS = len(FUNCTIONS)
 
 from sensed_world import SensedWorld
 
@@ -54,33 +55,13 @@ class QLearner:
     def updateWeights(self, prevWorld, newWorld, character, reward):
         delta = (reward) - self.Q(newWorld, character)
 
-        self.weights[0] += ALPHA * delta * f_to_exit(newWorld, character)
-        if self.weights[0] < .001:
-            self.weights[0] = .001
-        self.weights[1] += ALPHA * delta * f_to_monster(newWorld, character)
-        self.weights[2] += ALPHA * delta * f_to_bomb(newWorld, character)
-        self.weights[3] += ALPHA * delta * f_bomb_to_wall(newWorld)
-        self.weights[4] += ALPHA * delta * f_to_wall(newWorld, character)
-        self.weights[5] += ALPHA * delta * f_time_to_explosion(newWorld, character)
-        self.weights[6] += ALPHA * delta * f_is_exploded(newWorld, character)
-        self.weights[7] += ALPHA * delta * f_wall_to_bomb(newWorld)
-        self.weights[8] += ALPHA * delta * f_monster_to_bomb(newWorld)
-        self.weights[9] += ALPHA * delta * number_walls(newWorld)
-        self.weights[10] += ALPHA * delta * number_monsters(newWorld)
-
+        for i in range(len(FUNCTIONS)):
+            self.weights[i] += ALPHA * delta * FUNCTIONS[i](newWorld, character)
 
     def Q(self, world, character):
         sum = 0
-        sum += self.weights[0] * f_to_exit(world, character)
-        sum += self.weights[1] * f_to_monster(world, character)
-        sum += self.weights[2] * f_to_bomb(world, character)
-        sum += self.weights[3] * f_bomb_to_wall(world)
-        sum += self.weights[4] * f_to_wall(world, character)
-        sum += self.weights[5] * f_time_to_explosion(world, character)
-        sum += self.weights[6] * f_is_exploded(world, character)
-        sum += self.weights[7] * f_wall_to_bomb(world)
-        sum += self.weights[8] * f_monster_to_bomb(world)
-        sum += self.weights[9] * number_walls(world)
-        sum += self.weights[10] * number_monsters(world)
+
+        for i in range(len(FUNCTIONS)):
+            sum += self.weights[i] * FUNCTIONS[i](world, character)
 
         return sum
