@@ -162,30 +162,10 @@ def f_is_exploded(world, character):
 
     world.add_blast(closest_bomb)
 
-    if world.explosion_at(character.x, character.y) is not None or (bx == character.x and by == character.y):
-        return 0
-    else:
+    if world.explosion_at(character.x, character.y) is not None:
         return 1
-
-
-def f_is_exploded_help(world, loc):
-    character_location = loc
-
-    bombs = find_bombs(world)
-
-    if len(bombs) == 0:
-        return 0
-
-    (bx, by) = closest_point(character_location, bombs, euclidean=False)
-    closest_bomb = world.bomb_at(bx, by)
-
-    world.add_blast(closest_bomb)
-
-    if world.explosion_at(loc[0], loc[1]) is not None or (bx == loc[0] and by == loc[1]):
-        return 0
     else:
-        return 1
-
+        return 0
 
 def f_bomb_to_wall(world, character = None):
     bombs = find_bombs(world)
@@ -209,7 +189,7 @@ def f_is_exploded_now(world, character):
     if world.me(character) is None:
         return 1
     
-    if world.explosion_at(character.x, character.y) is not None or (bx == character.x and by == character.y):
+    if world.explosion_at(character.x, character.y) is None:
         return 0
     else:
         return 1
