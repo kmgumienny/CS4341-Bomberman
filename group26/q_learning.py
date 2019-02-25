@@ -7,8 +7,8 @@ from entity import *
 from events import Event
 
 #FUNCTIONS = [f_to_exit, f_to_monster, f_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion, f_is_exploded, f_wall_to_bomb, f_monster_to_bomb, number_walls, number_monsters, f_is_exploded_now]
-FUNCTIONS = [f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now]
-NUM_WEIGHTS = len(FUNCTIONS)
+#FUNCTIONS = [f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_time_to_explosion, f_bomb_to_wall]
+#NUM_WEIGHTS = len(FUNCTIONS)
 
 from sensed_world import SensedWorld
 
@@ -19,8 +19,12 @@ GAMMA = .9
 ALPHA = .2
 
 class QLearner:
-    def __init__(self, weights):
-        self.weights = weights
+    def __init__(self, functions, weights=[]):
+        self.functions = functions
+        if weights == []:
+            self.weights = [0]*len(self.functions)
+        else:
+            self.weights = weights
 
     #returns (dx, dy, bomb?)
     def bestMove(self, world, character):
@@ -56,13 +60,13 @@ class QLearner:
     def updateWeights(self, prevWorld, newWorld, character, reward):
         delta = (reward) - self.Q(newWorld, character)
 
-        for i in range(len(FUNCTIONS)):
-            self.weights[i] += ALPHA * delta * FUNCTIONS[i](newWorld, character)
+        for i in range(len(self.functions)):
+            self.weights[i] += ALPHA * delta * self.functions[i](newWorld, character)
 
     def Q(self, world, character):
         sum = 0
 
-        for i in range(len(FUNCTIONS)):
-            sum += self.weights[i] * FUNCTIONS[i](world, character)
+        for i in range(len(self.functions)):
+            sum += self.weights[i] * self.functions[i](world, character)
 
         return sum
