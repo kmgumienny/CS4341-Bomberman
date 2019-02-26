@@ -12,6 +12,7 @@ from monsters.stupid_monster import StupidMonster
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
 from q_learning import QLearner
+from q_functions import *
 
 # Create the game
 g = Game.fromfile('map.txt')
@@ -20,8 +21,8 @@ g.add_monster(StupidMonster("monster", # name
                             3, 9       # position
 ))
 
-# Current status: 93% success, partially trained (manually modified S2V1 weights)
-qLearner = QLearner([0.9043513311209257, -0.1, -0.8860218004661995, 8.635303064871081, 2.182181865553322, 0.038618906534273134, 2.3215325131848874, 8.627992562604867, 0.0, 0.25230394177423937, 0.0])
+# Current status: 99% success totally trained
+qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [163.74500850965978, -74.81375861611413, -3.710392437626575, 26.26781955724994, 71.22790728981906, 42.2166434790756, 3.47072116678088])
 
 g.add_character(qCharacter("me", # name
                               "C",  # avatar

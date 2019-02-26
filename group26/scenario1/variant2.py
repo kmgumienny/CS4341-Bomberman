@@ -12,6 +12,10 @@ from monsters.stupid_monster import StupidMonster
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
 from q_learning import QLearner
+from q_functions import *
+
+# Current status: 100% in 5 attempts, untrained values
+qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [163.74500850965978, -74.81375861611413, -3.710392437626575, 26.26781955724994, 71.22790728981906, 42.2166434790756, 3.47072116678088])
 
 # Create the game
 
@@ -21,8 +25,6 @@ g.add_monster(StupidMonster("monster", # name
                             3, 9       # position
 ))
 
-# Current status: 100% in 5 attempts, untrained values
-qLearner = QLearner([100, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
 g.add_character(qCharacter("me", # name
                               "C",  # avatar

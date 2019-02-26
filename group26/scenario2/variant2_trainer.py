@@ -9,10 +9,11 @@ from monsters.stupid_monster import StupidMonster
 
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
-from q_learning import QLearner, NUM_WEIGHTS
+from q_learning import QLearner
+from q_functions import *
 
 
-qLearner = QLearner([0]*NUM_WEIGHTS)
+qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [163.74500850965978, -74.81375861611413, -3.710392437626575, 26.26781955724994, 71.22790728981906, 42.2166434790756, 3.47072116678088])
 
 for i in range(0, 100):
     print("Running iteration #"+str(i))
@@ -28,7 +29,7 @@ for i in range(0, 100):
                                   "C",  # avatar
                                   0, 0,  # position
                                qLearner,
-                               True,
+                               False,
                                i,
                                1000))
     # Run!

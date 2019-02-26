@@ -23,9 +23,9 @@ class qCharacter(CharacterEntity):
         self.iterationNum = iterationNum
         self.maxIterations = maxIterations
 
-        self.randomChance = 1 / (self.iterationNum + 1) ** .25
+        self.randomChance = 1 / (self.iterationNum + 1) ** .5
         #self.randomChance = -1
-        print(self.randomChance)
+        #print(self.randomChance)
 
         self.prevWorld = None
 

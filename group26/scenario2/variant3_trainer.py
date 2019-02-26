@@ -9,13 +9,10 @@ from monsters.selfpreserving_monster import SelfPreservingMonster
 
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
-from q_learning import QLearner, NUM_WEIGHTS
+from q_learning import QLearner
+from q_functions import *
 
-
-
-
-qLearner = QLearner([0]*NUM_WEIGHTS)
-
+qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [169.5792884684401, -89.43359914000227, -9.055797124970724, 5.3165976373538, 100.30312257082886, 71.41381770528874, 4.911815807943525])
 
 for i in range(0, 100):
     print("Running iteration #"+str(i))

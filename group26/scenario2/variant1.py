@@ -10,13 +10,14 @@ from game import Game
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
 from q_learning import QLearner
+from q_functions import *
 
 
 # Create the game
 g = Game.fromfile('map.txt')
 
-# Current status: unknown success rate, trained
-qLearner = QLearner([0.07329931827878756, 0.0, -4.739669890677579, 7.157095990679528, 1.99471800916108, 13.169526383255644, 19.303965838014854, 7.14972908887264, 0.0, 0.2859332501784823, 0.0])
+# Current status: 100% success rate, trained
+qLearner = QLearner([f_to_exit, f_is_exploded_now, f_bomb_to_wall, f_time_to_explosion], [157.52129963352013, -65.41935486086436, 28.856877994965103, 20.48922401645315])
 
 g.add_character(qCharacter("me", # name
                               "C",  # avatar

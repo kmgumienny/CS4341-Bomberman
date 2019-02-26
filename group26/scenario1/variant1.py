@@ -16,8 +16,8 @@ from q_functions import *
 # Create the game
 g = Game.fromfile('map.txt')
 
-# Current status: 100% success, untrained values
-qLearner = QLearner([f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_time_to_explosion, f_bomb_to_wall], [114.54112122711332, 0.0, 4.114992302174889, -91.48558332791764, 6.079886312409335, 0.835050529831396])
+# Current status: 100% success, trained values
+qLearner = QLearner([f_to_exit, f_to_monster, f_is_exploded_now, f_time_to_explosion, f_bomb_to_wall], [90.77976324371679, 0.0, 7.520238703388388, 4.913100904773046, 17.162358880575766])
 
 g.add_character(qCharacter("me", # name
                               "C",  # avatar
