@@ -99,7 +99,7 @@ def f_to_wall(world, character):
     return (1 / float(a_star_distance)) ** 2
 
 
-def number_walls(world, character = None):
+def f_number_walls(world, character = None):
 
     walls = find_walls(world)
 
@@ -113,7 +113,7 @@ def number_walls(world, character = None):
     #I actually have no idea if this is a good implementation
     return (1 / float(len(walls))) ** 2
 
-def number_monsters(world, character = None):
+def f_number_monsters(world, character = None):
 
     monsters = find_monsters(world)
 
@@ -144,7 +144,7 @@ def f_time_to_explosion(world, character):
 
 # to see if the character is between a wall and map
 # no 2 walls will ever form a corner so no implementation
-def is_in_corner(world, character):
+def f_char_in_corner(world, character):
     world = SensedWorld.from_world(world)
 
     blocked_map_y = False
@@ -188,7 +188,7 @@ def is_in_corner(world, character):
 
     return 0
 
-def bomb_to_wall(world, character = None):
+def f_bomb_to_edge(world, character = None):
     world = SensedWorld.from_world(world)
 
     bomb = find_bombs(world)
@@ -215,7 +215,7 @@ def bomb_to_wall(world, character = None):
 # checks if character is inbetween bomb and monster
 # by checking A* distances
 # if char is closer to exit than monster, this is ignored
-def between_monster_bomb(world, character):
+def f_char_between_monster_and_bomb(world, character):
     monsters = find_monsters(world)
     bombs = find_bombs(world)
     character_location = (character.x, character.y)
@@ -251,7 +251,7 @@ def between_monster_bomb(world, character):
 
 # if chars distance to exit is lower than a monsters,
 # the function returns 1
-def race_to_exit(world, character):
+def f_race_monster_to_exit(world, character):
     monsters = find_monsters(world)
     character_location = (character.x, character.y)
     exits = find_exits(world)
@@ -340,23 +340,6 @@ def f_is_exploded(world, character):
     else:
         return 0
 
-def f_bomb_to_wall(world, character = None):
-    bombs = find_bombs(world)
-    walls = find_walls(world)
-
-    if len(walls) == 0:
-        return 1
-
-    if len(bombs) == 0:
-        return 0
-
-    bomb = bombs[0]
-
-    closest_wall = closest_point(bomb, walls)
-
-    a_star_distance = a_star(world, bomb, closest_wall)[1] + 1
-
-    return (1 / float(a_star_distance)) ** 2
 
 def f_is_exploded_now(world, character):
     if world.me(character) is None:
