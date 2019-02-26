@@ -10,9 +10,10 @@ from monsters.selfpreserving_monster import SelfPreservingMonster
 
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
-from q_learning import QLearner, NUM_WEIGHTS
+from q_learning import QLearner
+from q_functions import *
 
-qLearner = QLearner([0]*NUM_WEIGHTS)
+qLearner = QLearner([f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_bomb_exists])
 
 
 for i in range(0, 100):

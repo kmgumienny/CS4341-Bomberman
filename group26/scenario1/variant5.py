@@ -13,28 +13,32 @@ from monsters.selfpreserving_monster import SelfPreservingMonster
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
 from q_learning import QLearner
+from q_functions import *
+
+qLearner = QLearner([f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_bomb_exists],
+                    [4.461871799497596, -2.214658827136486, -0.5153270948384178, -8.324788954040265, 5.269938302682641])
 
 # Create the game
+for i in range(0, 100):
+    g = Game.fromfile('map.txt', display=False)
+    g.add_monster(StupidMonster("monster", # name
+                                "S",       # avatar
+                                3, 5,      # position
+    ))
+    g.add_monster(SelfPreservingMonster("monster", # name
+                                        "A",       # avatar
+                                        3, 13,     # position
+                                        2          # detection range
+    ))
 
-g = Game.fromfile('map.txt')
-g.add_monster(StupidMonster("monster", # name
-                            "S",       # avatar
-                            3, 5,      # position
-))
-g.add_monster(SelfPreservingMonster("monster", # name
-                                    "A",       # avatar
-                                    3, 13,     # position
-                                    2          # detection range
-))
 
-# Current status: 80% in 5 attempts, untrained values
-qLearner = QLearner([100, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
-g.add_character(qCharacter("me", # name
-                              "C",  # avatar
-                              0, 0,  # position
-                               qLearner,
-                               False,1,1))
+    g.add_character(qCharacter("me", # name
+                                  "C",  # avatar
+                                  0, 0,  # position
+                                   qLearner,
+                                   False,1,1))
 
-# Run!
-g.go()
+    # Run!
+    g.go()
+    print(g.world.scores["me"])

@@ -10,11 +10,8 @@ sys.path.insert(1, '../group26')
 from q_character import qCharacter
 from q_learning import QLearner
 from q_functions import *
-from monsters.stupid_monster import StupidMonster
-from monsters.selfpreserving_monster import SelfPreservingMonster
 
-qLearner = QLearner([f_to_exit, f_to_monster, f_is_exploded_now, f_time_to_explosion, f_bomb_to_wall], [90.77976324371679, 0.0, 7.520238703388388, 4.913100904773046, 17.162358880575766])
-#qLearner = QLearner([f_to_exit, f_to_monster, f_is_exploded_now, f_time_to_explosion, f_bomb_to_wall])
+qLearner = QLearner([f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_bomb_exists])
 
 for i in range(0, 100):
     print("Running iteration #"+str(i))

@@ -14,23 +14,25 @@ from q_character import qCharacter
 from q_learning import QLearner
 from q_functions import *
 
-# Current status: 100% in 5 attempts, untrained values
-qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [163.74500850965978, -74.81375861611413, -3.710392437626575, 26.26781955724994, 71.22790728981906, 42.2166434790756, 3.47072116678088])
+# Current status: 99% in 100 attempts
+qLearner = QLearner([f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_bomb_exists],
+                    [8.458119902186587, -3.0418798099256046, -0.31907802641410155, -3.770071502872679, 7.126050209167285])
 
 # Create the game
 
-g = Game.fromfile('map.txt')
-g.add_monster(StupidMonster("monster", # name
-                            "M",       # avatar
-                            3, 9       # position
-))
+for i in range(0, 100):
+    g = Game.fromfile('map.txt', display=False)
+    g.add_monster(StupidMonster("monster", # name
+                                "M",       # avatar
+                                3, 9       # position
+    ))
 
+    g.add_character(qCharacter("me", # name
+                                  "C",  # avatar
+                                  0, 0,  # position
+                                   qLearner,
+                                   False,1,1))
 
-g.add_character(qCharacter("me", # name
-                              "C",  # avatar
-                              0, 0,  # position
-                               qLearner,
-                               False,1,1))
-
-# Run!
-g.go()
+    # Run!
+    g.go()
+    print(g.world.scores["me"])
