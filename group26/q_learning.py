@@ -6,10 +6,6 @@ sys.path.insert(0, "../")
 from entity import *
 from events import Event
 
-#FUNCTIONS = [f_to_exit, f_to_monster, f_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion, f_is_exploded, f_wall_to_bomb, f_monster_to_bomb, number_walls, number_monsters, f_is_exploded_now]
-#FUNCTIONS = [f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_time_to_explosion, f_bomb_to_wall]
-#NUM_WEIGHTS = len(FUNCTIONS)
-
 from sensed_world import SensedWorld
 
 POSSIBLE_MOVES = [(1, 0, 0), (1, 1, 0), (1, -1, 0), (-1, 0, 0), (-1, 1, 0), (-1, -1, 0), (0, -1, 0), (0, 1, 0), (0, 0, 0),

@@ -12,6 +12,7 @@ from q_character import qCharacter
 from q_learning import QLearner
 from q_functions import *
 
+#Current status: 88% win rate, completely trained
 qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [159.33304471198795, -78.09792999957172, -18.750314892480493, 5.0167239427069035, 121.1905955320059, 124.59454062803833, 3.716190063440644])
 
 won = 0
