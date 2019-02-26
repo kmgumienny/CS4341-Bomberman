@@ -13,6 +13,7 @@ from monsters.selfpreserving_monster import SelfPreservingMonster
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
 from q_learning import QLearner
+from q_functions import *
 
 # Create the game
 
@@ -27,7 +28,8 @@ g.add_monster(SelfPreservingMonster("monster", # name
                                     2          # detection range
 ))
 
-qLearner = QLearner([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+#Current status: 60% win rate, totally trained
+qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [164.12592154785062, -72.35351066390663, -18.986104409901127, 8.473394337312714, 218.7488044723275, 224.56932851491754, 1.7431601829087855])
 
 g.add_character(qCharacter("me", # name
                               "C",  # avatar

@@ -10,10 +10,14 @@ from monsters.selfpreserving_monster import SelfPreservingMonster
 
 sys.path.insert(1, '../group26')
 from q_character import qCharacter
-from q_learning import QLearner, NUM_WEIGHTS
+from q_learning import QLearner
+from q_functions import *
 
-qLearner = QLearner([0]*NUM_WEIGHTS)
+#Current status: 67% win rate, totally trained
+qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [164.12592154785062, -72.35351066390663, -18.986104409901127, 8.473394337312714, 218.7488044723275, 224.56932851491754, 1.7431601829087855])
 
+count = 0
+wins = 0
 
 for i in range(0, 100):
     print("Running iteration #"+str(i))
@@ -34,10 +38,15 @@ for i in range(0, 100):
                                   "C",  # avatar
                                   0, 0,  # position
                                qLearner,
-                               True,
+                               False,
                                i,
                                1000))
     # Run!
     g.go()
     print(qLearner.weights)
     print(g.world.scores["me"])
+    count += 1
+    if g.world.scores["me"] > 0:
+       wins += 1
+
+print("Won " + str(wins/count) + " percent of the time")
