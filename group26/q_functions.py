@@ -142,6 +142,101 @@ def f_time_to_explosion(world, character):
 
     return (1 / float(closest_bomb.timer+1)) ** 2
 
+#  to see if the character is between a wall and map
+# no 2 walls will ever form a corner so no implementation
+def is_in_corner(world, character):
+    world = SensedWorld.from_world(world)
+
+    blocked_map_y = False
+    blocked_map_x = False
+
+    blocked_wall = False
+    character_location = (character.x, character.y)
+
+    if character_location[0] == 0:
+        blocked_map_x = True
+
+    if character_location[0] == world.width()-1:
+        blocked_map_x = True
+
+    if character_location[1] == 0:
+        blocked_map_y = True
+
+    if character_location[1] == world.height()-1:
+        blocked_map_y = True
+
+    if not blocked_map_x and not blocked_map_y:
+        return 0
+
+    if blocked_map_x and blocked_map_y:
+        return 1
+
+    if blocked_map_x and not blocked_map_y:
+        if world.wall_at(character_location[0], character_location[1] + 1):
+            blocked_wall = True
+        if world.wall_at(character_location[0], character_location[1] - 1):
+            blocked_wall = True
+
+    if not blocked_map_x and blocked_map_y:
+        if world.wall_at(character_location[0] + 1, character_location[1]):
+            blocked_wall = True
+        if world.wall_at(character_location[0] - 1, character_location[1]):
+            blocked_wall = True
+
+    if blocked_wall and (blocked_map_x or blocked_map_y):
+        return 1
+
+
+def between_monster_bomb(world, character):
+    monsters = find_monsters(world)
+    bombs = find_bombs(world)
+    character_location = (character.x, character.y)
+
+    if len(bombs) == 0 or len(monsters) == 0:
+        return 0
+
+    closest_monster = closest_point(bombs[0], monsters, euclidean=False)
+    closest_bomb = closest_point(character_location, bombs, euclidean=False)
+
+    a_star_distance_bomb_to_monster = a_star(world, closest_bomb, closest_monster)[1] + 1
+    a_star_distance_char_to_monster = a_star(world, character_location, closest_monster)[1] + 1
+
+    if a_star_distance_char_to_monster < a_star_distance_bomb_to_monster:
+        return 1
+
+    return 0
+
+def f_to_bomb_explosion(world, character):
+    character_location = (character.x, character.y)
+    bombs = find_bombs(world)
+
+    if len(bombs) == 0:
+        return 0
+
+    closest_bomb = closest_point(character_location, bombs, euclidean=False)
+
+    bomb = world.bomb_at(closest_bomb[0], closest_bomb[1])
+    a_star_distance = a_star(world, character_location, closest_bomb)[1]+1
+
+
+    if bomb.timer == world.expl_range and world.expl_range >= a_star_distance:
+        return 1
+
+    return 0
+
+
+def f_wall_to_bomb(world, character = None):
+    walls = find_walls(world)
+    bombs = find_bombs(world)
+
+    if len(bombs) == 0 or len(walls) == 0:
+        return 0
+
+    closest_wall = closest_point(bombs[0], walls, euclidean=False)
+
+    a_star_distance = a_star(world, bombs[0], closest_wall)[1]+1
+
+    return (1/float(a_star_distance))**2
 
 # return 1 if the cell the character is in will explode, or has exploded
 # return 0 if the cell the character is in will not explode
