@@ -142,7 +142,7 @@ def f_time_to_explosion(world, character):
 
     return (1 / float(closest_bomb.timer+1)) ** 2
 
-#  to see if the character is between a wall and map
+# to see if the character is between a wall and map
 # no 2 walls will ever form a corner so no implementation
 def is_in_corner(world, character):
     world = SensedWorld.from_world(world)
@@ -186,7 +186,8 @@ def is_in_corner(world, character):
     if blocked_wall and (blocked_map_x or blocked_map_y):
         return 1
 
-
+# checks if character is inbetween bomb and monster
+# by checking A* distances
 def between_monster_bomb(world, character):
     monsters = find_monsters(world)
     bombs = find_bombs(world)
@@ -206,6 +207,8 @@ def between_monster_bomb(world, character):
 
     return 0
 
+# checks to see if the character is in the bomb radius
+# right as the bomb is [bomb radius] number of turns from exploding
 def f_to_bomb_explosion(world, character):
     character_location = (character.x, character.y)
     bombs = find_bombs(world)
@@ -224,7 +227,7 @@ def f_to_bomb_explosion(world, character):
 
     return 0
 
-
+# checks to see if the bomb is near a wall
 def f_wall_to_bomb(world, character = None):
     walls = find_walls(world)
     bombs = find_bombs(world)
