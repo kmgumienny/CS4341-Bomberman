@@ -21,8 +21,11 @@ class TestCharacter(CharacterEntity):
                 for y in range(world.height()):
                     if world.exit_at(x, y):
                         self.exit = (x, y)
-        
-        path = get_path(world, (self.x, self.y), self.exit)
+
+        if self.bombed is not None:
+            path = get_path(world, (self.x, self.y), (0, 0))
+        else:
+            path = get_path(world, (self.x, self.y), self.exit)
         
         self.tiles = {}
         for i in range(1, len(path)):
@@ -36,9 +39,10 @@ class TestCharacter(CharacterEntity):
         elif not world.wall_at(next_cell[0], next_cell[1]):
             self.move(next_cell[0]-self.x, next_cell[1]-self.y)
         else:
+            print('Placing bomb!')
             self.place_bomb()
             self.bombed = (self.x, self.y)
-            self.move(-1, -1)
+            self.move(next_cell[0]-self.x, next_cell[1]-self.y)
 
 
 # Adapted from RedBlobGames
@@ -62,9 +66,9 @@ def get_path(world, start, end):
             if world.wall_at(next_cell[0], next_cell[1]):
                 for dir2 in [(1, 0), (1, 1), (1, -1), (-1, 0), (-1, 1), (-1, -1), (0, -1), (0, 1)]:
                     if world.bomb_at(next_cell[0]+dir2[0], next_cell[1]+dir2[1]):
-                        cost = 10
+                        cost = 120#world.bomb_at(next_cell[0]+dir2[0], next_cell[1]+dir2[1]).timer + 2
                     else:
-                        cost = 10
+                        cost = 120
             elif world.explosion_at(next_cell[0], next_cell[1]):
                 cost = 99999999
             elif world.monsters_at(next_cell[0], next_cell[1]):
@@ -76,7 +80,11 @@ def get_path(world, start, end):
 
             for dir2 in [(1, 0), (1, 1), (1, -1), (-1, 0), (-1, 1), (-1, -1), (0, -1), (0, 1)]:
                 if world.monsters_at(next_cell[0]+dir2[0], next_cell[1]+dir2[1]):
-                    cost = 99999999
+                    cost = 5
+
+            for dir2 in [(2, 0), (2, 1), (2, 2), (2, -1), (2, -2), (-2, 0), (-2, 1), (-2, 2), (-2, -1), (-2, -2), (0, 2), (1, 2), (-1, 2), (0, -2), (1, -2), (-1, -2)]:
+                if world.monsters_at(next_cell[0]+dir2[0], next_cell[1]+dir2[1]):
+                    cost = 3
 
             new_cost = cost_so_far[current] + cost
             if next_cell not in cost_so_far or new_cost < cost_so_far[next_cell]:

@@ -16,21 +16,24 @@ from q_functions import *
 
 # Create the game
 
-g = Game.fromfile('map.txt')
-g.add_monster(SelfPreservingMonster("monster", # name
-                                    "M",       # avatar
-                                    3, 9,      # position
-                                    1          # detection range
-))
+for i in range(0, 100):
+    g = Game.fromfile('map.txt', display=False)
+    g.add_monster(SelfPreservingMonster("monster", # name
+                                        "M",       # avatar
+                                        3, 9,      # position
+                                        1          # detection range
+    ))
 
-# Current status: 80% win rate, totally trained
-qLearner = QLearner([f_to_exit, f_is_exploded_now, f_to_monster, f_monster_to_bomb, f_bomb_to_wall, f_to_wall, f_time_to_explosion], [169.12117250971846, -77.31912800315031, -10.034113316375368, 8.897468734450623, 101.24816974980446, 72.63951738531733, 3.167600184843277])
+    # 89% win rate (100 attempts)
+    qLearner = QLearner([f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_bomb_exists],
+                        [8.564012007264198, -3.0569255103512067, 0.06834293304145697, -6.878067177939179, 7.26429976929269])
 
-g.add_character(qCharacter("me", # name
-                              "C",  # avatar
-                              0, 0,  # position
-                               qLearner,
-                               False,1,1))
+    g.add_character(qCharacter("me", # name
+                                  "C",  # avatar
+                                  0, 0,  # position
+                                   qLearner,
+                                   False,1,1))
 
-# Run!
-g.go()
+    # Run!
+    g.go()
+    print(g.world.scores["me"])
