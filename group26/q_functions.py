@@ -186,8 +186,35 @@ def is_in_corner(world, character):
     if blocked_wall and (blocked_map_x or blocked_map_y):
         return 1
 
+    return 0
+
+def bomb_to_wall(world, character = None):
+    world = SensedWorld.from_world(world)
+
+    bomb = find_bombs(world)
+
+    if len(bomb) == 0:
+        return 0
+
+    bomb = bomb[0]
+
+    bomb_edge = False
+
+    if bomb[0] == 0 or bomb[0] == world.width()-1:
+        bomb_edge = True
+
+    if bomb[1] == 0 or bomb[1] == world.height()-1:
+        bomb_edge = True
+
+    if bomb_edge:
+        return 1
+
+    return 0
+
+
 # checks if character is inbetween bomb and monster
 # by checking A* distances
+# if char is closer to exit than monster, this is ignored
 def between_monster_bomb(world, character):
     monsters = find_monsters(world)
     bombs = find_bombs(world)
@@ -202,9 +229,56 @@ def between_monster_bomb(world, character):
     a_star_distance_bomb_to_monster = a_star(world, closest_bomb, closest_monster)[1] + 1
     a_star_distance_char_to_monster = a_star(world, character_location, closest_monster)[1] + 1
 
-    if a_star_distance_char_to_monster < a_star_distance_bomb_to_monster:
-        return 1
+    bomb = world.bomb_at(closest_bomb[0], closest_bomb[1])
 
+    exits = find_exits(world)
+
+    if len(exits) == 0:
+        return 0
+
+    closest_exit = closest_point(character_location, exits, euclidean=False)
+
+    a_star_distance_char_to_exit = a_star(world, character_location, closest_exit)[1] + 1
+    a_star_distance_monster_to_exit = a_star(world, closest_monster, closest_exit)[1] + 1
+
+
+    if a_star_distance_char_to_monster < a_star_distance_bomb_to_monster:
+        if a_star_distance_char_to_exit < a_star_distance_monster_to_exit:
+            return 0
+        return (1 / float(a_star_distance_char_to_monster)) ** 2
+
+    return 0
+
+# if chars distance to exit is lower than a monsters,
+# the function returns 1
+def race_to_exit(world, character):
+    monsters = find_monsters(world)
+    character_location = (character.x, character.y)
+    exits = find_exits(world)
+    if len(monsters) == 0 or len(exits) == 0:
+        return 0
+
+    closest_exit = closest_point(character_location, exits, euclidean=False)
+    a_star_distance_char_to_exit = a_star(world, character_location, closest_exit)[1] + 1
+
+    if len(monsters) == 1:
+        closest_monster = closest_point(character_location, monsters, euclidean=False)
+        a_star_distance_monster_to_exit = a_star(world, closest_monster, closest_exit)[1] + 1
+
+
+        if a_star_distance_char_to_exit < a_star_distance_monster_to_exit:
+            return 1
+    else:
+        a_star_distance_monster1_to_exit = a_star(world, monsters[0], closest_exit)[1] + 1
+        a_star_distance_monster2_to_exit = a_star(world, monsters[1], closest_exit)[1] + 1
+
+        if a_star_distance_monster1_to_exit < a_star_distance_monster2_to_exit:
+            closest_monster = a_star_distance_monster1_to_exit
+        else:
+            closest_monster = a_star_distance_monster2_to_exit
+
+        if a_star_distance_char_to_exit < closest_monster:
+            return 1
     return 0
 
 # checks to see if the character is in the bomb radius
@@ -214,7 +288,7 @@ def f_to_bomb_explosion(world, character):
     bombs = find_bombs(world)
 
     if len(bombs) == 0:
-        return 0
+        return 0.0
 
     closest_bomb = closest_point(character_location, bombs, euclidean=False)
 
@@ -223,9 +297,9 @@ def f_to_bomb_explosion(world, character):
 
 
     if bomb.timer == world.expl_range and world.expl_range >= a_star_distance:
-        return 1
+        return 1.0
 
-    return 0
+    return 0.0
 
 # checks to see if the bomb is near a wall
 def f_wall_to_bomb(world, character = None):
