@@ -119,11 +119,6 @@ def f_number_monsters(world, character = None):
     if len(monsters) == 0:
         return 0
 
-    #closest_wall = closest_point(character_location, walls, euclidean=False)
-
-    # a_star_distance = a_star(world, character_location, closest_wall)[1]+1
-
-    #I actually have no idea if this is a good implementation
     return (1 / float(len(monsters))) ** 2
 
 
@@ -273,11 +268,11 @@ def f_race_monster_to_exit(world, character):
         a_star_distance_monster2_to_exit = a_star(world, monsters[1], closest_exit)[1] + 1
 
         if a_star_distance_monster1_to_exit < a_star_distance_monster2_to_exit:
-            closest_monster = a_star_distance_monster1_to_exit
+            farthest_monster = a_star_distance_monster2_to_exit
         else:
-            closest_monster = a_star_distance_monster2_to_exit
+            farthest_monster = a_star_distance_monster1_to_exit
 
-        if a_star_distance_char_to_exit < closest_monster:
+        if a_star_distance_char_to_exit < farthest_monster:
             return 1
     return 0
 
@@ -371,7 +366,7 @@ def f_is_exploded_now(world, character):
 
     return 0
 
-def f_bomb_exists(world, character):
+def f_bomb_exists(world, character = None):
     if len(find_bombs(world)) > 0:
         return 1
     else:
@@ -393,3 +388,67 @@ def f_within_two_of_monster(world, character):
         return 1
     else:
         return 0
+
+def f_exit_v_monsters(world, character):
+    character_location = (character.x, character.y)
+    monsters = find_monsters(world)
+    exits = find_exits(world)
+
+    if len(exits) == 0:
+        return 0
+
+    closest_exit = closest_point(character_location, exits, euclidean=False)
+
+    a_star_distance = (a_star(world, character_location, closest_exit)[1]) * ((len(monsters)+1))+1
+
+    return (1/float(a_star_distance))**2
+
+def f_bomb_walls_when_monsters(world, character = None):
+
+    monsters = find_monsters(world)
+    bombs = find_bombs(world)
+    walls = find_walls(world)
+
+    if len(bombs) == 0 or len(monsters) == 0 or len(walls) == 0:
+        return 0
+
+    bomb = bombs[0]
+    hits_wall = False
+
+    for i in range(0, world.expl_range):
+
+        if bomb[0] + i < world.width():
+            if world.wall_at(bomb[0]+i, bomb[1]):
+                hits_wall = True
+
+        if bomb[0] - i >= 0:
+            if world.wall_at(bomb[0]-i, bomb[1]):
+                hits_wall = True
+
+        if bomb[1] + i < world.height():
+            if world.wall_at(bomb[0], bomb[1]+i):
+                hits_wall = True
+
+        if bomb[1] - i >= 0:
+            if world.wall_at(bomb[0], bomb[1]-i):
+                hits_wall = True
+
+    if hits_wall:
+        return 1
+
+    return 0
+
+def f_char_to_edge_when_monsters(world, character):
+    character_location = (character.x, character.y)
+    monsters = find_monsters(world)
+
+    char_edge = False
+
+
+    if character_location[1] == 0 or character_location[1] == world.height()-1:
+        char_edge = True
+
+    if char_edge and len(monsters) > 0:
+        return 1/(character_location[1]+1)
+
+    return 0
