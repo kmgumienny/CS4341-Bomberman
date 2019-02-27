@@ -12,7 +12,7 @@ from sensed_world import SensedWorld
 
 
 class qCharacter(CharacterEntity):
-    def __init__(self, name, avatar, x, y, qLearner, isTraining, iterationNum, maxIterations):
+    def __init__(self, name, avatar, x, y, qLearner, isTraining, iterationNum, maxIterations, bombs = True):
         CharacterEntity.__init__(self, name, avatar, x, y)
         self.exit = None
         self.bombed = None
@@ -23,8 +23,10 @@ class qCharacter(CharacterEntity):
         self.iterationNum = iterationNum
         self.maxIterations = maxIterations
 
-        self.randomChance = 1 / (self.iterationNum + 1) ** .25
+        self.randomChance = 1 / (self.iterationNum + 1) ** .5
         #print(self.randomChance)
+
+        self.bombs = bombs
 
         self.prevWorld = None
 
@@ -35,7 +37,11 @@ class qCharacter(CharacterEntity):
         if self.isTraining:
             if random.random() < self.randomChance:
                 possibleStep = [-1, 0, 1]
-                possibleBomb = [0, 1]
+
+                if self.bombs:
+                    possibleBomb = [0, 1]
+                else:
+                    possibleBomb = [0]
 
                 if random.choice(possibleBomb) == 1:
                     self.place_bomb()
@@ -63,10 +69,10 @@ class qCharacter(CharacterEntity):
     def updateWeights(self, world, won, lost):
         if self.isTraining:
             if won:
-                reward = 10
+                reward = 100
             elif lost:
-                reward = -5
+                reward = -50
             else:
-                reward = (f_to_exit(world, self)**.1)*10
+                reward = (f_to_exit(world, self)**.1)*10 - (f_to_monster(world, self)**.1)*5
 
             self.qLearner.updateWeights(self.prevWorld, world, self, reward)

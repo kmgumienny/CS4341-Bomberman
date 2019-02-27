@@ -15,10 +15,11 @@ from q_character import qCharacter
 from q_learning import QLearner
 from q_functions import *
 
-qLearner = QLearner([f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_bomb_exists],
-                    [4.461871799497596, -2.214658827136486, -0.5153270948384178, -8.324788954040265, 5.269938302682641])
+qLearner = QLearner([f_to_exit, f_to_monster, f_to_bomb, f_is_exploded_now, f_bomb_exists, f_within_two_of_monster],
+[6.816656292974258, -2.214658827136486, -0.5886164957366603, -8.324788954040265, 4.402454683798063, 0])
 
 # Create the game
+wins = 0
 for i in range(0, 100):
     g = Game.fromfile('map.txt', display=False)
     g.add_monster(StupidMonster("monster", # name
@@ -41,4 +42,7 @@ for i in range(0, 100):
 
     # Run!
     g.go()
-    print(g.world.scores["me"])
+
+    if g.world.scores["me"] > 0:
+        wins += 1
+    print("{}, {:.2f}%".format(g.world.scores["me"], wins/(i+1)*100))

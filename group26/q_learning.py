@@ -8,25 +8,28 @@ from events import Event
 
 from sensed_world import SensedWorld
 
-POSSIBLE_MOVES = [(1, 0, 0), (1, 1, 0), (1, -1, 0), (-1, 0, 0), (-1, 1, 0), (-1, -1, 0), (0, -1, 0), (0, 1, 0), (0, 0, 0),
-                  (1, 0, 1), (1, 1, 1), (1, -1, 1), (-1, 0, 1), (-1, 1, 1), (-1, -1, 1), (0, -1, 1), (0, 1, 1), (0, 0, 1)]
-
 GAMMA = .9
 ALPHA = .2
 
 class QLearner:
-    def __init__(self, functions, weights=[]):
+    def __init__(self, functions, weights=[], bombs=True):
         self.functions = functions
         if weights == []:
             self.weights = [0]*len(self.functions)
         else:
             self.weights = weights
 
-    #returns (dx, dy, bomb?)
+        if not bombs:
+            self.possible_moves = [(1, 0, 0), (1, 1, 0), (1, -1, 0), (-1, 0, 0), (-1, 1, 0), (-1, -1, 0), (0, -1, 0), (0, 1, 0), (0, 0, 0)]
+        else:
+            self.possible_moves = [(1, 0, 0), (1, 1, 0), (1, -1, 0), (-1, 0, 0), (-1, 1, 0), (-1, -1, 0), (0, -1, 0), (0, 1, 0), (0, 0, 0),
+                              (1, 0, 1), (1, 1, 1), (1, -1, 1), (-1, 0, 1), (-1, 1, 1), (-1, -1, 1), (0, -1, 1), (0, 1, 1), (0, 0, 1)]
+
+    # returns (dx, dy, bomb?)
     def bestMove(self, world, character):
         max_q = -9999
-        max_a = (0,0,0)
-        for move in POSSIBLE_MOVES:
+        max_a = (0, 0, 0)
+        for move in self.possible_moves:
             new_world = SensedWorld.from_world(world)
 
             if new_world.me(character) is None:

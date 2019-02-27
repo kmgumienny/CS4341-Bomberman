@@ -372,6 +372,7 @@ def f_bomb_exists(world, character = None):
     else:
         return 0
 
+
 def f_within_two_of_monster(world, character):
     character_location = (character.x, character.y)
 
@@ -385,9 +386,16 @@ def f_within_two_of_monster(world, character):
     a_star_distance = a_star(world, character_location, closest_monster)[1] + 1
 
     if a_star_distance <= 3:
-        return 1
+        return (4-a_star_distance)/4
     else:
         return 0
+
+
+def f_character_moved(world, character):
+    if character.dx != 0 or character.dy != 0:
+        return 1
+    return 0
+
 
 def f_exit_v_monsters(world, character):
     character_location = (character.x, character.y)
@@ -402,6 +410,7 @@ def f_exit_v_monsters(world, character):
     a_star_distance = (a_star(world, character_location, closest_exit)[1]) * ((len(monsters)+1))+1
 
     return (1/float(a_star_distance))**2
+
 
 def f_bomb_walls_when_monsters(world, character = None):
 
@@ -437,6 +446,7 @@ def f_bomb_walls_when_monsters(world, character = None):
         return 1
 
     return 0
+
 
 def f_char_to_edge_when_monsters(world, character):
     character_location = (character.x, character.y)
